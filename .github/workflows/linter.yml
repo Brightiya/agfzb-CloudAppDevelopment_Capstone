@@ -23,7 +23,7 @@ jobs: # list of things to do
         run: npm install
         working-directory: functions/sample/nodejs
 
-      - name: Code Linting
+      - name: Code Linting 
         run: npm run lint
         working-directory: functions/sample/nodejs
     
