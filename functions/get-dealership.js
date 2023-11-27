@@ -59,35 +59,6 @@ app.get('/dealerships/get', (req, res) => {
     });
 });
 
-app.get('/dealerships?state=""', (req, res) => {
-    const { state, id } = req.query;
-
-    // Create a selector object based on query parameters
-    const selector = {};
-    if (state) {
-        selector.state = state;
-    }
-    
-    if (id) {
-        selector.id = parseInt(id); // Filter by "id" with a value of 1
-    }
-
-    const queryOptions = {
-        selector,
-        limit: 10, // Limit the number of documents returned to 10
-    };
-
-    db.find(queryOptions, (err, body) => {
-        if (err) {
-            console.error('Error fetching dealerships:', err);
-            res.status(500).json({ error: 'Somthing went wrong on the server.' });
-            res.status(404).json({ error: 'The database does not exist.' });
-        } else {
-            const dealerships = body.docs;
-            res.json(dealerships);
-        }
-    });
-});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

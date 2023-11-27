@@ -12,9 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cloudant/cloudant": "^4.4.0"
+    "@cloudant/cloudant": "^4.4.0",
+    "@ibm-cloud/cloudant": "^0.8.0"
   },
   "devDependencies": {
-    "eslint": "^8.27.0"
+    "eslint": "^8.54.0"
   }
 }

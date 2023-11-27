@@ -53,36 +53,26 @@ def post_request(url, payload, **kwargs):
 # - Parse JSON results into a CarDealer object list
 
 def get_dealers_from_cf(url, **params):
+
     results = []
     json_result = get_request(url, **params)
 
-    if json_result:
-        if 'rows' in json_result:
-            dealers = json_result["rows"]
-        elif 'docs' in json_result:
-            dealers = json_result["docs"]
-        else:
-            return results
+    dealers = json_result
+    for dealer in dealers:
+        dealer_doc = dealer
 
-        for dealer in dealers:
-            if 'doc' in dealer:
-                dealer_doc = dealer
-            else:
-                dealer_doc = dealer
-            dealer_obj = CarDealer(
-                address=dealer_doc.get("address"),
-                city=dealer_doc.get("city"),
-                full_name=dealer_doc.get("full_name"),
-                id=dealer_doc.get("id"),
-                lat=dealer_doc.get("lat"),
-                long=dealer_doc.get("long"),
-                short_name=dealer_doc.get("short_name"),
-                st=dealer_doc.get("st"),
-                state=dealer_doc.get("state"),
-                zip=dealer_doc.get("zip")
-            )
-            results.append(dealer_obj)
-
+        dealer_obj = CarDealer(
+            address=dealer_doc.get("address"),
+            city=dealer_doc.get("city"),
+            full_name=dealer_doc.get("full_name"),
+            id=dealer_doc.get("id"),
+            lat=dealer_doc.get("lat"),
+            long=dealer_doc.get("long"),
+            short_name=dealer_doc.get("short_name"),
+            st=dealer_doc.get("st"),
+            state=dealer_doc.get("state"),
+            zip=dealer_doc.get("zip"))
+        results.append(dealer_obj)
     return results
 
 
@@ -103,7 +93,7 @@ def get_dealer_by_id_from_cf(url, id):
                                full_name=dealer_doc["full_name"],
 
                                st=dealer_doc["st"], zip=dealer_doc["zip"])
-    return dealer_obj
+        return dealer_obj
 
 
 def get_dealer_reviews_from_cf(url, **kwargs):
@@ -147,8 +137,8 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 
 def analyze_review_sentiments(text):
-    url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/7d187f1c-9168-4008-a7a6-80a45dac1762"
-    api_key = "ClTvB5Okt6-KBJ_K8zWalMuiZJ15iB25FaNmrGKaChQt"
+    url = "https://dd5dab06-83d7-4e3f-bdd3-fba01337ae7c-bluemix.cloudantnosqldb.appdomain.cloud"
+    api_key = "E2SRo-xKOn_MHYPXHVWiP6ckeM-IZsrGdK-CGiRcX8II"
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01', authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
@@ -157,5 +147,4 @@ def analyze_review_sentiments(text):
     label = json.dumps(response, indent=2)
     label = response['sentiment']['document']['label']
 
-    return (label)
-
+    return label

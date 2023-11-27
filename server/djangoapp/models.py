@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
+from django.conf import settings
 
 
 # Create your models here.
@@ -15,7 +16,10 @@ class CarMake(models.Model):
     description = models.CharField(max_length=1000)
 
     def __str__(self):
-        return "Name: " + self.name
+        return f"{self.name}"
+
+        # return "Name: " + self.name
+
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -37,13 +41,13 @@ class CarModel(models.Model):
     WAGON = 'wagon'
     SPORT = 'sport'
     TYPE_CHOICES = [
-        (SEDAN,'Sedan'),
-        (SUV,'SUV'),
-        (WAGON,'Station Wagon'),
-        (SPORT,'Sport')
-        ]
+        (SEDAN, 'Sedan'),
+        (SUV, 'SUV'),
+        (WAGON, 'Station Wagon'),
+        (SPORT, 'Sport')
+    ]
 
-    car_type = models.CharField(max_length = 20, choices=TYPE_CHOICES)
+    car_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     year = models.DateField()
 
     def __str__(self):
@@ -76,6 +80,7 @@ class CarDealer:
 
     def __str__(self):
         return "Dealer name: " + self.full_name
+
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
 class DealerReview:
