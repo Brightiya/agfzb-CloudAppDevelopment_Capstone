@@ -56,7 +56,7 @@ def post_review():
         return jsonify({"error": "The request payload is not in JSON format"}), 400
 
     # Extract review data from the request JSON
-    review_data = request.json["review"]
+    review_data = request.json
 
     # Validate that the required fields are present in the review data
     required_fields = [

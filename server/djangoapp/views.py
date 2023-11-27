@@ -81,16 +81,12 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
-
     if request.method == "GET":
-
         context = {}
         url = "http://localhost:3000/dealerships/get"
         dealerships = get_dealers_from_cf(url)
         context["dealership_list"] = dealerships
         return render(request, 'djangoapp/index.html', context)
-
-
 
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
@@ -117,7 +113,8 @@ def get_dealer_details(request, id):
 
 def add_review(request, id):
     context = {}
-    dealer_url = "https://bightiyahen-3000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+    dealer_url = ("https://bightiyahen-3000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai"
+                  "/dealerships/get")
     dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
     context["dealer"] = dealer
     if request.method == 'GET':
@@ -150,6 +147,7 @@ def add_review(request, id):
 
             new_payload = {}
             new_payload["review"] = payload
-            review_post_url = "https://us-south.functions.appdomain.cloud/api/v1/web/4b21363a-2d5d-462c-9617-98689ed9165b/dealership-package/post-review"
+            review_post_url = ("https://us-south.functions.appdomain.cloud/api/v1/web/4b21363a-2d5d-462c-9617"
+                               "-98689ed9165b/dealership-package/post-review")
             post_request(review_post_url, new_payload, id=id)
         return redirect("djangoapp:dealer_details", id=id)

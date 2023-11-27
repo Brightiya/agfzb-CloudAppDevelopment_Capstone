@@ -53,14 +53,12 @@ def post_request(url, payload, **kwargs):
 # - Parse JSON results into a CarDealer object list
 
 def get_dealers_from_cf(url, **params):
-
     results = []
     json_result = get_request(url, **params)
 
     dealers = json_result
     for dealer in dealers:
         dealer_doc = dealer
-
         dealer_obj = CarDealer(
             address=dealer_doc.get("address"),
             city=dealer_doc.get("city"),
@@ -72,7 +70,9 @@ def get_dealers_from_cf(url, **params):
             st=dealer_doc.get("st"),
             state=dealer_doc.get("state"),
             zip=dealer_doc.get("zip"))
+
         results.append(dealer_obj)
+
     return results
 
 
