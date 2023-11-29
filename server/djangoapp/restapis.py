@@ -8,10 +8,15 @@ from requests.auth import HTTPBasicAuth
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import time
 
-
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
 #                                     auth=HTTPBasicAuth('apikey', api_key))
+
+import requests
+import json
+from .models import CarDealer
+from requests.auth import HTTPBasicAuth
+
 
 def get_request(url, **params):
     try:
@@ -21,7 +26,7 @@ def get_request(url, **params):
             api_key = params['api_key']
             del params['api_key']
             response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-                                    auth=HTTPBasicAuth('apikey', api_key))
+                                    auth=HTTPBasicAuth('apikey', "mpOtbGnGrNyOoiUVUx1cu3-Y-e03cacKvdIXBbtG-_Sv"))
         status_code = response.status_code
         # print(f"{url} with status {status_code}")
         json_data = json.loads(response.text)
@@ -80,8 +85,8 @@ def get_dealers_from_cf(url, **params):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
-def get_dealer_by_id_from_cf(url, id):
-    json_result = get_request(url, id=id)
+def get_dealer_by_id_from_cf(url, ids):
+    json_result = get_request(url, id=ids)
     print('json_result from line 54', json_result)
 
     if json_result:
@@ -92,7 +97,8 @@ def get_dealer_by_id_from_cf(url, id):
                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
                                full_name=dealer_doc["full_name"],
 
-                               st=dealer_doc["st"], zip=dealer_doc["zip"])
+                               st=dealer_doc["st"], zip=dealer_doc["zip"], short_name=dealer_doc["short_name"],
+                               state=dealer_doc["state"])
         return dealer_obj
 
 
@@ -110,7 +116,12 @@ def get_dealer_reviews_from_cf(url, **kwargs):
             review_obj = DealerReview(dealership=dealer_review["dealership"],
                                       name=dealer_review["name"],
                                       purchase=dealer_review["purchase"],
-                                      review=dealer_review["review"])
+                                      review=dealer_review["review"],
+                                      car_model=dealer_review["car_model"],
+                                      car_make=dealer_review["car_make"],
+                                      car_year=dealer_review["car_year"],
+                                      purchase_date=dealer_review["purchase_date"],
+                                      sentiment=dealer_review["sentiment"])
             if "id" in dealer_review:
                 review_obj.id = dealer_review["id"]
             if "purchase_date" in dealer_review:
@@ -137,8 +148,9 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 
 def analyze_review_sentiments(text):
-    url = "https://dd5dab06-83d7-4e3f-bdd3-fba01337ae7c-bluemix.cloudantnosqldb.appdomain.cloud"
-    api_key = "E2SRo-xKOn_MHYPXHVWiP6ckeM-IZsrGdK-CGiRcX8II"
+    url = ("https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/7db77c2a-3329-43a4-ba57"
+           "-1a02b2c23a87")
+    api_key = "mpOtbGnGrNyOoiUVUx1cu3-Y-e03cacKvdIXBbtG-_Sv"
     authenticator = IAMAuthenticator(api_key)
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01', authenticator=authenticator)
     natural_language_understanding.set_service_url(url)
