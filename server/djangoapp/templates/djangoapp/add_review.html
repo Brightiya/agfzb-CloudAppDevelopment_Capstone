@@ -45,6 +45,7 @@
             </div>
         </nav>
     <!--Add review form here -->
+
     <form action="{% url 'djangoapp:add_review' dealer.id%}" method="post">
 
         <div class="container"> <!--Style root div with .container class -->
@@ -53,7 +54,7 @@
             <hr>
 
             <div class="form-group">
-                <label for="review"><b>Enter the review content:</b></label>
+                <label><b>Enter the review content:</b></label>
                 <textarea class="form-control" id="content" name="content" row="2" required></textarea>
             </div>
 

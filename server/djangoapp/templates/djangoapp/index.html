@@ -58,11 +58,7 @@
 
     <!--Add a dealer table here -->
 
-    <script>
-      $(function () {
-        $('#table').bootstrapTable();
-      });
-    </script>
+
     <table class="table" id="table" data-filter-control="true">
         <thead>
             <tr>
@@ -84,10 +80,30 @@
                     <td>{{ dealer.zip }}</td>
                     <td>{{ dealer.st }}</td>
                 </tr>
+
             {% endfor %}
         </tbody>
     </table>
-
+   {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
     </body>
+
+    <script>
+
+        $(function() {
+
+            $('#table').bootstrapTable({
+        pagination: true,
+        pageSize: 10,
+        pageList: [10, 20, 30, 40, 50],
+        filterControl: true
+    });
+        })
+    </script>
+
+
 
 </html>

@@ -92,15 +92,15 @@ def get_dealerships(request):
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
 # ...
-def get_dealer_details(request, ids):
+def get_dealer_details(request, id):
     if request.method == "GET":
         context = {}
-        dealer_url = "localhost:3000/dealerships/get"
-        dealer = get_dealer_by_id_from_cf(dealer_url, ids=ids)
+        dealer_url = "http://localhost:3000/dealerships/get"
+        dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
         context["dealer"] = dealer
 
-        review_url = "localhost:5000/api/get_reviews?id=15"
-        reviews = get_dealer_reviews_from_cf(review_url, id=ids)
+        review_url = "http://localhost:5000/api/get_reviews?id=15"
+        reviews = get_dealer_reviews_from_cf(review_url, id=id)
         print(reviews)
         context["reviews"] = reviews
 
@@ -113,9 +113,8 @@ def get_dealer_details(request, ids):
 
 def add_review(request, id):
     context = {}
-    dealer_url = ("https://bightiyahen-3000.theiadocker-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai"
-                  "/dealerships/get")
-    dealer = get_dealer_by_id_from_cf(dealer_url, ids=id)
+    dealer_url = "http://localhost:3000/dealerships/get"
+    dealer = get_dealer_by_id_from_cf(dealer_url, id=id)
     context["dealer"] = dealer
     if request.method == 'GET':
         # Get cars for the dealer
@@ -148,5 +147,22 @@ def add_review(request, id):
             new_payload = {}
             new_payload["review"] = payload
             review_post_url = "http://127.0.0.1:5000/api/post_review"
-            post_request(review_post_url, new_payload, id=id)
+
+            review = {
+                "id": id,
+                "time": datetime.utcnow().isoformat(),
+                "name": request.user.username,  # Assuming you want to use the authenticated user's name
+                "dealership": id,
+                "review": request.POST["content"],  # Extract the review from the POST request
+                "purchase": True,  # Extract purchase info from POST
+                "purchase_date": request.POST["purchasedate"],  # Extract purchase date from POST
+                "car_make": car.name,  # Extract car make from POST
+                "car_model": car.name,  # Extract car model from POST
+                "car_year": int(car.year.strftime("%Y")),  # Extract car year from POST
+            }
+            review = json.dumps(review, default=str)
+            new_payload1 = {}
+            new_payload1["review"] = review
+            print("\nREVIEW:", review)
+            post_request(review_post_url, review, id=id)
         return redirect("djangoapp:dealer_details", id=id)
